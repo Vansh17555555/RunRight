@@ -1,0 +1,20 @@
+{
+  "name": "runright",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces --if-present",
+    "dev:api": "npm run dev -w @runright/api",
+    "dev:worker": "npm run dev -w @runright/worker",
+    "dev:web": "npm run dev -w web",
+    "db:generate": "npm run generate -w @runright/common",
+    "db:migrate": "npm run migrate -w @runright/common"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

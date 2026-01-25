@@ -1,0 +1,21 @@
+{
+  "name": "@runright/common",
+  "version": "0.0.1",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "generate": "prisma generate",
+    "migrate": "prisma migrate dev"
+  },
+  "private": true,
+  "dependencies": {
+    "@prisma/client": "^5.7.0",
+    "dotenv": "^17.2.3",
+    "pg": "^8.17.2"
+  },
+  "devDependencies": {
+    "@types/dotenv": "^6.1.1",
+    "@types/node": "^25.0.10",
+    "prisma": "^5.7.0"
+  }
+}

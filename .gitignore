@@ -1,0 +1,46 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Environment Variables (CRITICAL)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.env*
+
+# Build Artifacts
+dist/
+build/
+.next/
+out/
+*.tsbuildinfo
+
+# Prisma
+/packages/common/prisma/migrations/
+# Note: Keep migrations in Git but ignore the local SQLite db if used
+*.db
+*.db-journal
+
+# Secrets & Keys
+*.pem
+*.key
+certs/
+
+# OS Specific
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE Specific
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Project Specific
+apps/worker/temp/
+apps/worker/code.*
+/brain/
