@@ -26,8 +26,9 @@ export class JudgingService {
       where: { problemId }
     });
 
+    // Fallback if no test cases (though usually there should be)
+    // We can just run it once to check for syntax errors or basic execution.
     if (testCases.length === 0) {
-      // Fallback to simple execution if no test cases exist
       const output = await this.executor.execute(language, code);
       return {
         verdict: verdictService.determineVerdict(output),
@@ -40,56 +41,75 @@ export class JudgingService {
     }
 
     let passedTests = 0;
-    let finalVerdict: Verdict = 'AC';
     let totalCpuTime = 0;
-    let firstErrorStdout = '';
-    let firstErrorStderr = '';
+    
+    // Start session
+    let sessionId: string | null = null;
+    
+    try {
+      sessionId = await this.executor.startSession(language, code);
 
-    for (const testCase of testCases) {
-      // For now, we pass input via stdin (ExecutorService handles this)
-      // but we need the user code to READ from stdin.
-      const output = await this.executor.execute(language, code, testCase.input);
-      totalCpuTime += output.duration;
+      for (const testCase of testCases) {
+        // Run specific test case on the open session
+        const output = await this.executor.runOnSession(sessionId, language, testCase.input);
+        
+        totalCpuTime += output.duration;
 
-      const verdict = verdictService.determineVerdict(output);
-      
-      if (verdict !== 'AC') {
-        return {
-          verdict,
-          stdout: output.stdout,
-          stderr: output.stderr,
-          passedTests,
-          totalTests: testCases.length,
-          cpuTime: totalCpuTime
-        };
+        const verdict = verdictService.determineVerdict(output);
+        
+        if (verdict !== 'AC') {
+          return {
+            verdict,
+            stdout: output.stdout,
+            stderr: output.stderr,
+            passedTests,
+            totalTests: testCases.length,
+            cpuTime: totalCpuTime
+          };
+        }
+
+        // Comparison logic
+        const normalizedActual = output.stdout.trim().replace(/\r\n/g, '\n');
+        const normalizedExpected = testCase.expectedOutput.trim().replace(/\r\n/g, '\n');
+
+        if (normalizedActual === normalizedExpected) {
+          passedTests++;
+        } else {
+          return {
+            verdict: 'WA',
+            stdout: output.stdout,
+            stderr: `Expected: ${testCase.expectedOutput}\nActual: ${output.stdout}`,
+            passedTests,
+            totalTests: testCases.length,
+            cpuTime: totalCpuTime
+          };
+        }
       }
+      
+      return {
+        verdict: 'AC',
+        stdout: 'All tests passed!',
+        stderr: '',
+        passedTests,
+        totalTests: testCases.length,
+        cpuTime: Math.floor(totalCpuTime / testCases.length)
+      };
 
-      // Comparison logic (trimming for robustness)
-      const normalizedActual = output.stdout.trim().replace(/\r\n/g, '\n');
-      const normalizedExpected = testCase.expectedOutput.trim().replace(/\r\n/g, '\n');
-
-      if (normalizedActual === normalizedExpected) {
-        passedTests++;
-      } else {
-        return {
-          verdict: 'WA',
-          stdout: output.stdout,
-          stderr: `Expected: ${testCase.expectedOutput}\nActual: ${output.stdout}`,
-          passedTests,
-          totalTests: testCases.length,
-          cpuTime: totalCpuTime
-        };
+    } catch (error: any) {
+      logger.error('Error during judging session', { submissionId, error: error.message });
+      return {
+        verdict: 'RTE', // Runtime Error or System Error
+        stdout: '',
+        stderr: error.message || 'Unknown error occurred',
+        passedTests,
+        totalTests: testCases.length,
+        cpuTime: totalCpuTime
+      };
+    } finally {
+      if (sessionId) {
+        await this.executor.cleanupSession(sessionId);
       }
     }
-
-    return {
-      verdict: 'AC',
-      stdout: 'All tests passed!',
-      stderr: '',
-      passedTests,
-      totalTests: testCases.length,
-      cpuTime: Math.floor(totalCpuTime / testCases.length) // Average time
-    };
   }
 }
 

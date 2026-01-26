@@ -6,6 +6,87 @@ async function main() {
 
   const problems = [
     {
+  title: 'Valid Parentheses',
+  slug: 'valid-parentheses',
+  difficulty: 'EASY',
+  description: `
+<p>Given a string <code>s</code> containing just the characters <code>(){}[]</code>, determine if the input string is valid.</p>
+<p>An input string is valid if open brackets are closed in the correct order.</p>
+`,
+  defaultCode: {
+    python: "import sys\n\ndef solve():\n    s = sys.stdin.read().strip()\n    # Logic here\n\nsolve()",
+    javascript: "const fs = require('fs');\n\nfunction solve() {\n    const s = fs.readFileSync(0, 'utf8').trim();\n    // Logic here\n}\n\nsolve();",
+    cpp: "#include <iostream>\n#include <stack>\nusing namespace std;\n\nint main() {\n    string s; cin >> s;\n    // Logic here\n    return 0;\n}"
+  },
+  testCases: {
+    create: [
+      { input: '()[]{}', expectedOutput: 'true', isSample: true },
+      { input: '(]', expectedOutput: 'false', isSample: true },
+      { input: '({[]})', expectedOutput: 'true', isSample: false }
+    ]
+  }
+},{
+  title: 'Maximum Subarray',
+  slug: 'maximum-subarray',
+  difficulty: 'MEDIUM',
+  description: `
+<p>Given an integer array <code>nums</code>, find the subarray with the largest sum, and return its sum.</p>
+`,
+  defaultCode: {
+    python: "import sys\nimport json\n\ndef solve():\n    nums = json.loads(sys.stdin.read())\n    # Logic here\n\nsolve()",
+    javascript: "const fs = require('fs');\n\nfunction solve() {\n    const nums = JSON.parse(fs.readFileSync(0, 'utf8'));\n    // Logic here\n}\n\nsolve();",
+    cpp: "#include <iostream>\n#include <vector>\nusing namespace std;\n\nint main() {\n    int n; cin >> n;\n    vector<int> nums(n);\n    for(int i=0;i<n;i++) cin >> nums[i];\n    // Logic here\n    return 0;\n}"
+  },
+  testCases: {
+    create: [
+      { input: '[-2,1,-3,4,-1,2,1,-5,4]', expectedOutput: '6', isSample: true },
+      { input: '[1]', expectedOutput: '1', isSample: true },
+      { input: '[5,4,-1,7,8]', expectedOutput: '23', isSample: false }
+    ]
+  }
+}
+
+,{
+  title: 'Merge Two Sorted Lists',
+  slug: 'merge-two-sorted-lists',
+  difficulty: 'EASY',
+  description: `
+<p>Merge two sorted linked lists and return it as a sorted list.</p>
+`,
+  defaultCode: {
+    python: "import sys\nimport json\n\ndef solve():\n    lists = json.loads(sys.stdin.read())\n    # Logic here\n\nsolve()",
+    javascript: "const fs = require('fs');\n\nfunction solve() {\n    const lists = JSON.parse(fs.readFileSync(0, 'utf8'));\n    // Logic here\n}\n\nsolve();",
+    cpp: "#include <iostream>\n#include <vector>\nusing namespace std;\n\nint main() {\n    // Logic here\n    return 0;\n}"
+  },
+  testCases: {
+    create: [
+      { input: '[[1,2,4],[1,3,4]]', expectedOutput: '[1,1,2,3,4,4]', isSample: true },
+      { input: '[[],[]]', expectedOutput: '[]', isSample: true }
+    ]
+  }
+}
+,{
+  title: 'Climbing Stairs',
+  slug: 'climbing-stairs',
+  difficulty: 'EASY',
+  description: `
+<p>You are climbing a staircase. It takes <code>n</code> steps to reach the top.</p>
+<p>Each time you can either climb 1 or 2 steps.</p>
+`,
+  defaultCode: {
+    python: "import sys\n\ndef solve():\n    n = int(sys.stdin.read())\n    # Logic here\n\nsolve()",
+    javascript: "const fs = require('fs');\n\nfunction solve() {\n    const n = parseInt(fs.readFileSync(0, 'utf8'));\n    // Logic here\n}\n\nsolve();",
+    cpp: "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n; cin >> n;\n    // Logic here\n    return 0;\n}"
+  },
+  testCases: {
+    create: [
+      { input: '2', expectedOutput: '2', isSample: true },
+      { input: '3', expectedOutput: '3', isSample: true }
+    ]
+  }
+}
+,
+    {
       title: 'Two Sum',
       slug: 'two-sum',
       difficulty: 'EASY',
