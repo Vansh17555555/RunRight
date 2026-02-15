@@ -32,4 +32,4 @@ COPY --from=builder /app/apps/worker/package.json ./apps/worker/
 
 ENV NODE_ENV=production
 
-CMD ["node", "apps/worker/dist/src/worker.js"]
+CMD ["node", "apps/worker/dist/worker.js"]
