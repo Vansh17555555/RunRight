@@ -6,7 +6,8 @@ import { JobPayload, SubmissionStatus, prisma, RedisEvents } from '@runright/com
 import { JudgingService, EvaluationResult } from './services/judging.service';
 
 const REDIS_URL = process.env.REDIS_URL || 'redis://localhost:6379';
-const QUEUE_KEY = 'submission_queue';
+const QUEUE_FAST = 'submission_queue:fast';
+const QUEUE_HEAVY = 'submission_queue:heavy';
 
 class Worker {
   private redis: Redis;
@@ -41,7 +42,9 @@ class Worker {
   private async processLoop() {
     while (this.isRunning) {
       try {
-        const result = await this.redis.blpop(QUEUE_KEY, 2);
+        // Priority: FAST first, then HEAVY
+        // blpop(key1, key2, ..., timeout)
+        const result = await this.redis.blpop(QUEUE_FAST, QUEUE_HEAVY, 2);
         if (!result) continue;
 
         const [_, jobData] = result;

@@ -30,15 +30,30 @@ export class SubmissionController {
       
       const { id } = submission;
 
-      // 2. Push to Queue
+      // 2. Determine Queue Type
+      let queueType: 'fast' | 'heavy' = 'fast';
+      
+      if (problemId) {
+        // We need to import prisma to query test cases
+        const { prisma } = require('@runright/common');
+        const testCaseCount = await prisma.testCase.count({
+           where: { problemId }
+        });
+        
+        if (testCaseCount > 500) {
+            queueType = 'heavy';
+        }
+      }
+
+      // 3. Push to Queue
       await queueService.addJob({
         submissionId: id,
         language,
         code: sourceCode,
         problemId: problemId || null
-      });
+      }, queueType);
 
-      logger.info('Submission created and queued', { submissionId: id });
+      logger.info('Submission created and queued', { submissionId: id, queueType });
       return res.status(202).json({ 
         message: 'Submission accepted',
         submissionId: id
