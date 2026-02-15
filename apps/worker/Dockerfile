@@ -19,7 +19,8 @@ RUN npm run build --if-present
 FROM node:18-alpine
 
 # Install Docker CLI so the worker can spawn docker commands
-RUN apk add --no-cache docker-cli
+RUN apk add --no-cache docker-cli openssl
+
 
 WORKDIR /app
 

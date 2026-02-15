@@ -25,6 +25,8 @@ RUN npm run build --if-present
 # --- Runner Stage ---
 FROM node:18-alpine
 
+RUN apk add --no-cache openssl
+
 WORKDIR /app
 
 # Copy built artifacts and necessary files
