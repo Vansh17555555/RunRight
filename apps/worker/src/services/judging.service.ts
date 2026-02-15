@@ -69,14 +69,18 @@ export class JudgingService {
         }
 
         // Comparison logic
-        const normalizedActual = output.stdout.trim().replace(/\r\n/g, '\n');
-        const normalizedExpected = testCase.expectedOutput.trim().replace(/\r\n/g, '\n');
+        // Normalize by removing all whitespace to handle formatting differences
+        // e.g. "[0, 1]" should match "[0,1]"
+        const normalize = (str: string) => str.replace(/\s+/g, '');
+        
+        const normalizedActual = normalize(output.stdout);
+        const normalizedExpected = normalize(testCase.expectedOutput);
 
         if (normalizedActual === normalizedExpected) {
           passedTests++;
         } else {
           return {
-            verdict: 'WA',
+            verdict: 'WA' as Verdict,
             stdout: output.stdout,
             stderr: `Expected: ${testCase.expectedOutput}\nActual: ${output.stdout}`,
             passedTests,
