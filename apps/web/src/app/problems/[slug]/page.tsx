@@ -11,7 +11,7 @@ import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 
-const API_BASE = 'http://localhost:3000';
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
 
 export default function ProblemSolver() {
   const { slug } = useParams();

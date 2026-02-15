@@ -7,7 +7,7 @@ import axios from 'axios';
 import { Code2, ChevronRight, Trophy, BookOpen } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-const API_BASE = 'http://localhost:3000';
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
 
 export default function ProblemsPage() {
   const [problems, setProblems] = useState<any[]>([]);

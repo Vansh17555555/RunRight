@@ -10,11 +10,8 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=3000
-      - REDIS_URL=redis://redis:6379
-      - DATABASE_URL=postgresql://runright:runright@postgres:5432/runright?schema=public
-    depends_on:
-      - redis
-      - postgres
+      - REDIS_URL=${REDIS_URL}
+      - DATABASE_URL=${DATABASE_URL}
     restart: always
 
   worker:
@@ -23,33 +20,23 @@ services:
       dockerfile: apps/worker/Dockerfile
     environment:
       - NODE_ENV=production
-      - REDIS_URL=redis://redis:6379
-      - DATABASE_URL=postgresql://runright:runright@postgres:5432/runright?schema=public
+      - REDIS_URL=${REDIS_URL}
+      - DATABASE_URL=${DATABASE_URL}
     volumes:
-      # Crucial: Allow worker to spawn sibling containers
+      # Allow worker to spawn sibling Docker containers for code execution
       - /var/run/docker.sock:/var/run/docker.sock
-    depends_on:
-      - redis
-      - postgres
     restart: always
 
-  redis:
-    image: redis:alpine
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+      args:
+        - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
     ports:
-      - "6379:6379"
-    restart: always
-
-  postgres:
-    image: postgres:15-alpine
+      - "3001:3001"
     environment:
-      - POSTGRES_USER=runright
-      - POSTGRES_PASSWORD=runright
-      - POSTGRES_DB=runright
-    ports:
-      - "5433:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - PORT=3001
+    depends_on:
+      - api
     restart: always
-
-volumes:
-  postgres_data:

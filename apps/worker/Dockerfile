@@ -11,7 +11,7 @@ COPY apps/worker ./apps/worker
 RUN npm ci
 
 WORKDIR /app/packages/common
-RUN npm run build
+RUN npx prisma generate && npm run build
 
 WORKDIR /app/apps/worker
 RUN npm run build --if-present

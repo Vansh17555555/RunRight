@@ -15,9 +15,9 @@ COPY apps/api ./apps/api
 # Install dependencies (installing everything to build)
 RUN npm ci
 
-# Build Common
+# Generate Prisma Client and Build Common
 WORKDIR /app/packages/common
-RUN npm run build
+RUN npx prisma generate && npm run build
 
 # Build API
 WORKDIR /app/apps/api

@@ -21,7 +21,7 @@ export default function LoginPage() {
     setError('');
 
     try {
-      const response = await axios.post('http://localhost:3000/auth/login', { email, password });
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'}/auth/login`, { email, password });
       login(response.data.user, response.data.token);
       router.push('/');
     } catch (err: any) {
