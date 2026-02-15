@@ -40,3 +40,14 @@ services:
     depends_on:
       - api
     restart: always
+
+  autoscaler:
+    build:
+      context: .
+      dockerfile: apps/autoscaler/Dockerfile
+    environment:
+      - REDIS_URL=${REDIS_URL}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./docker-compose.yml:/app/docker-compose.yml
+    restart: always
