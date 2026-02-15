@@ -3,7 +3,6 @@ FROM node:18-alpine AS builder
 WORKDIR /app
 
 COPY package.json package-lock.json ./
-COPY tsconfig.json ./
 
 COPY packages/common ./packages/common
 COPY apps/worker ./apps/worker

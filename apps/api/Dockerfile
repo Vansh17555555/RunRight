@@ -4,7 +4,6 @@ WORKDIR /app
 
 # Copy root files
 COPY package.json package-lock.json ./
-COPY tsconfig.json ./
 
 # Copy packages
 COPY packages/common ./packages/common
